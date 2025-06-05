@@ -10,8 +10,7 @@ Install-Module -Name 'LSUClient'
 
 # Hel gwybodaeth am y ddyfais
 gcim Win32_ComputerSystem | fl Manufacturer, Model, SystemFamily
-Get-LSUpdate -Repository \\sccm-rheolwr-01\d$\Lenovo_Driver_Repository
-Get-LSUpdate | Tee-Object -Variable updates
+Get-LSUpdate -Repository \\sccm-rheolwr-01\d$\Lenovo_Driver_Repository | Tee-Object -Variable updates
 
 # Gosod y Drivers
 $updates | ? Type -like "*Driver*" | Install-LSUpdate
