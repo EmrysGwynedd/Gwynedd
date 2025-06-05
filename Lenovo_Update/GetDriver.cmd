@@ -4,7 +4,6 @@ PowerShell -NoProfile -ExecutionPolicy Unrestricted -Command Enable-PSRemoting -
 echo *
 echo ***************************************************************
 echo ** RHEDEG SGAN A GOSOD ****************************************
-echo ** BIOS, FIRMWARE A *******************************************
 echo ** DRIVERS NAWR!! *********************************************
 echo ***************************************************************
 echo *
