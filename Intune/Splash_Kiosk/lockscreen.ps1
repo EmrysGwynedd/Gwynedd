@@ -1,0 +1,1 @@
+Invoke-WebRequest "https://systemau.cyngor.gwynedd.llyw.cymru/Desgfwrdd/Teams/019e036d-a811-4280-96c6-c2cebc552939.png" -OutFile "C:\TG\Splash_Kiosk\lock_kiosk.png" -UseDefaultCredentials

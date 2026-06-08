@@ -1,8 +1,8 @@
 
-$Path = "Registry::HKLM\System\CurrentControlSet\Control\Power"
-$Name = "PlatformAoAcOverride"
+$Path = "Registry::HKCU\Software\Microsoft\Office\16.0\Outlook\Options\General"
+$Name = "HideNewOutlookToggle"
 $Type = "DWORD"
-$Value = 0
+$Value = 1
 
 try{
     if(!(Test-Path $Path)){New-Item -Path $Path -Force}
