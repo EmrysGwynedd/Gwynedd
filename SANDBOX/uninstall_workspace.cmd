@@ -1,0 +1,1 @@
+%windir%\system32\sdbinst.exe -u "C:\WINDOWS\AppPatch\CustomSDB\{dcdaa2fd-eaac-4ab0-9ece-f3df127a6c45}.sdb"

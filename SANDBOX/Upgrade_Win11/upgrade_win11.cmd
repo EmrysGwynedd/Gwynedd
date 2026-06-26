@@ -1,0 +1,1 @@
+C:\TG\Windows11_UPGRADE\setup.exe /auto upgrade /dynamicupdate disable /quiet /eula accept /installfrom C:\sources\install.wim /imageindex 3 /PostOOBE C:\TG\Windows11_UPGRADE\postOOBE.cmd
