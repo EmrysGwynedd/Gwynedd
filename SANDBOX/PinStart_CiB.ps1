@@ -1,0 +1,2 @@
+$CommonStartMenu = :GetFolderPath('CommonStartMenu')
+$CommonStartMenu

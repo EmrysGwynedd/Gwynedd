@@ -1,0 +1,1 @@
+'C:\TG\Win11_UPGRADE','C:\TG\Office365','C:\TG\BgInfo' | ForEach-Object { if (Test-Path $_) { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue; Write-Output "Deleted: $_" } }

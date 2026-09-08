@@ -1,0 +1,3 @@
+Os yn rhedeg yr isod yn powershell mi ddoth rhestr o MSI code a lleoliad bob install ar y cyfrifiadur:
+
+get-wmiobject Win32_Product | Sort-Object -Property Name |Format-Table IdentifyingNumber, Name, LocalPackage -AutoSize

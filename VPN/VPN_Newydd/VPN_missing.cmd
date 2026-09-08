@@ -1,0 +1,5 @@
+REM Start installation
+REM msiexec.exe /package "C:\TG\Cisco_51191862\cisco-secure-client-win-5.1.19.1862-core-vpn-predeploy-k9.msi" /norestart /passive PRE_DEPLOY_DISABLE_VPN=0 /lvx* "C:\TG\Logs\anyconnect-win-5.1.19.18627-core-vpn-predeploy-k9.log"
+msiexec.exe /package "C:\TG\Cisco_51191862\cisco-secure-client-win-5.1.19.1862-nam-predeploy-k9.msi" /norestart /passive /lvx* "C:\TG\Logs\anyconnect-win-5.1.19.1862-nam-predeploy-k9.log"
+msiexec.exe /package "C:\TG\Cisco_51191862\cisco-secure-client-win-5.1.19.1862-iseposture-predeploy-k9.msi" /norestart /passive /lvx* "C:\TG\Logs\anyconnect-win-5.1.19.1862-iseposture-predeploy-k9.log"
+msiexec.exe /package "C:\TG\Cisco_51191862\cisco-secure-client-win-5.1.19.1862-dart-predeploy-k9.msi" /norestart /passive /lvx* "C:\TG\Logs\anyconnect-win-5.1.19.1862-dart-predeploy-k9.log"

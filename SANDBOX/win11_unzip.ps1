@@ -1,0 +1,1 @@
+Expand-Archive C:\TG\Win11_UPGRADE.zip -DestinationPath C:\TG\
