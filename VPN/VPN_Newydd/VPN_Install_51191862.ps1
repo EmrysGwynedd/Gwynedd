@@ -85,7 +85,7 @@ Function Invoke-MSIInstallWithRetry {
     $installed = $false
 
     while ($attempt -le $MaxRetries -and -not $installed) {
-        Write-Host "Attempt $attempt of ${$MaxRetries}: Installing $ProcessLabel..."
+        Write-Host "Attempt $attempt of ${MaxRetries}: Installing $ProcessLabel..."
         $process = Start-Process -FilePath "msiexec.exe" -ArgumentList $arguments -Wait -PassThru
 
         # Standard MSI success exit codes: 0 = Success, 3010/1641 = Success (Reboot Required)
@@ -133,9 +133,20 @@ $msiPath3 = 'C:\TG\Cisco_51191862\cisco-secure-client-win-5.1.19.1862-iseposture
 $logPath3 = 'C:\TG\Logs\Cisco_51191862_ISE_install.log'
 return Invoke-MSIInstallWithRetry -MsiPath $msiPath3 -LogPath $logPath3 -ProcessLabel "ISE" -MaxRetries 3
 }
+
 Function Update-Start {
-& "C:\TG\Cisco_51191862\ServiceUI.exe" -process:explorer.exe "C:\Program Files (x86)\Cisco\Cisco Secure Client\UI\csc_ui.exe" 
-$Global:InstProcess = "Finished_Start"
+
+    Write-Host "Launching ServiceUI kill timer..."
+
+    Start-Process powershell.exe -ArgumentList '-NoProfile -WindowStyle Hidden -Command "Start-Sleep -Seconds 15; Stop-Process -Name ServiceUI -Force -ErrorAction SilentlyContinue"' -WindowStyle Hidden
+
+    Write-Host "Launching Cisco UI via ServiceUI..."
+
+    & "C:\TG\Cisco_51191862\ServiceUI.exe" -process:explorer.exe "C:\Program Files (x86)\Cisco\Cisco Secure Client\UI\csc_ui.exe"
+
+    Write-Host "ServiceUI has terminated. Continuing installation..."
+
+    $Global:InstProcess = "Finished_Start"
 }
 
 
@@ -188,41 +199,47 @@ if ($CVer) {
 }
 
 If ($Global:CurVer -eq $Global:LatestVer){
-Write-Host "The latest version is already installed.   No further action required.    Exiting install....."
+    Write-Host "The latest version is already installed. No further action required. Exiting install....."
+    Stop-Transcript -ErrorAction SilentlyContinue
+    $host.SetShouldExit(0)
+    exit 0
 }
 Else
 {
-Write-Host "The currently installed version requires an update. Proceeding to check other prereq's before continuing. "
-Test-LANConnection
+    Write-Host "The currently installed version requires an update. Proceeding to check other prereq's before continuing. "
+    Test-LANConnection
 
-If($Global:Filecopy -eq "Skipped" -or $Global:Filecopy -eq "Done") {
-    # Each function will retry up to 3 times before returning $false
-    $vpnSuccess = Update-VPN
-    $namSuccess = Update-NAM
-    $iseSuccess = Update-ISE
+    If($Global:Filecopy -eq "Skipped" -or $Global:Filecopy -eq "Done") {
+        # Each function will retry up to 3 times before returning $false
+        $vpnSuccess = Update-VPN
+        $namSuccess = Update-NAM
+        $iseSuccess = Update-ISE
 
-    # Verify that all 3 installations succeeded before launching the UI
-    if ($vpnSuccess -and $namSuccess -and $iseSuccess) {
-        Write-Host "✅ All 3 Cisco packages installed successfully." -ForegroundColor Green
-        Update-Start
-    } else {
-        Write-Host "❌ One or more installations failed after retries. Aborting UI start." -ForegroundColor Red
+        # Verify that all 3 installations succeeded before launching the UI
+        if ($vpnSuccess -and $namSuccess -and $iseSuccess) {
+            Write-Host "✅ All 3 Cisco packages installed successfully." -ForegroundColor Green
+            Update-Start
+        } else {
+            Write-Host "❌ One or more installations failed after retries. Aborting UI start." -ForegroundColor Red
+        }
+    }
+
+    If($Global:InstProcess -eq "Finished_Start") {
+        Test-Service
+    }
+
+    If ($Global:ServiceError -gt 0 -or $Global:InstProcess -ne "Finished_Start"){
+        Write-Host "Warning.... The current Install did NOT complete successfully. Please examine the local install logs in C:\TG\Logs for more information on the failure."
     }
 }
 
-If($Global:InstProcess -eq "Finished_Start")
-{Test-Service}
-
-If ($Global:ServiceError -gt 0 -or $Global:InstProcess -ne "Finished_Start"){
-Write-Host "Warning....  The current Install did NOT complete successfully. Please examine the local install logs in C:\TG\Logs for more information on the failure."
-}
-
-}
-
 If ($Global:NoLan -eq 1){
-Write-Host "Not on corporate LAN or VPN is active. Installation skipped."
-Exit 48
+    Write-Host "Not on corporate LAN or VPN is active. Installation skipped."
+    Stop-Transcript -ErrorAction SilentlyContinue
+    exit 0
 }
 Else
 {
+    Stop-Transcript -ErrorAction SilentlyContinue
+    exit 0
 }
