@@ -1,0 +1,1 @@
+Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*,HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like "*Cisco*" } | Select-Object DisplayName, DisplayVersion, Publisher | Sort-Object DisplayName
